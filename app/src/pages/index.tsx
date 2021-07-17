@@ -18,7 +18,7 @@ const Index = () => {
     }, [loading]);
 
     return (
-        <Container height="100vh">
+        <Container>
             <Hero />
             <Main>
                 <List spacing={3} my={0}>
@@ -32,7 +32,9 @@ const Index = () => {
                                 {question.body}
                                 <Flex ml={8}>
                                     {question.answers.map((answer, key) => (
-                                        <Box mr={4}>{answer.body}</Box>
+                                        <Box mr={4} key={key}>
+                                            {answer.body}
+                                        </Box>
                                     ))}
                                 </Flex>
                             </ListItem>

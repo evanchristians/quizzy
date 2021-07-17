@@ -25,6 +25,7 @@ export const FormInput = ({ name, label }: FormInputProps) => {
                             {label ?? toSentence(name)}
                         </FormLabel>
                         <Input
+                            size="lg"
                             {...field}
                             id={name}
                             placeholder={label ?? toSentence(name)}
