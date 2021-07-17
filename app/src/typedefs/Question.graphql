@@ -11,13 +11,13 @@ query Questions {
 }
 
 mutation CreateQuestion($createQuestionData: CreateQuestionInput!) {
-  createQuestion(data: $createQuestionData) {
-    id
-    body
-    answers {
-      id
-      body
-      isCorrect
+    createQuestion(data: $createQuestionData) {
+        id
+        body
+        answers {
+            id
+            body
+            isCorrect
+        }
     }
-  }
 }
