@@ -23,8 +23,8 @@
         "resolveJsonModule": true,
         "baseUrl": ".",
         "paths": {
-            "@inputs/*": ["./src/inputs/*"],
-            "@resolvers/*": ["./src/resolvers/*"],
+            "@inputs/*": ["src/inputs/*"],
+            "@resolvers/*": ["src/resolvers/*"],
             "@models/*": ["./src/models/*"]
         }
     },

@@ -1,0 +1,23 @@
+query Questions {
+    questions {
+        id
+        body
+        answers {
+            id
+            body
+            isCorrect
+        }
+    }
+}
+
+mutation CreateQuestion($createQuestionData: CreateQuestionInput!) {
+  createQuestion(data: $createQuestionData) {
+    id
+    body
+    answers {
+      id
+      body
+      isCorrect
+    }
+  }
+}
