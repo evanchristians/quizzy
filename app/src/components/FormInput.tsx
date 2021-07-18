@@ -11,9 +11,10 @@ import { toSentence } from "../utils/stringToSentence";
 export interface FormInputProps {
     name: string;
     label?: string;
+    type?: string;
 }
 
-export const FormInput = ({ name, label }: FormInputProps) => {
+export const FormInput = ({ name, label, type = "text" }: FormInputProps) => {
     return (
         <Field name={name}>
             {({ field, form }) => {
@@ -29,6 +30,7 @@ export const FormInput = ({ name, label }: FormInputProps) => {
                             {...field}
                             id={name}
                             placeholder={label ?? toSentence(name)}
+                            type={type}
                         />
                         <FormErrorMessage>{form.errors[name]}</FormErrorMessage>
                     </FormControl>

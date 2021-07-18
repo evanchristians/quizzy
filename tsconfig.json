@@ -25,7 +25,9 @@
         "paths": {
             "@inputs/*": ["src/inputs/*"],
             "@resolvers/*": ["src/resolvers/*"],
-            "@models/*": ["./src/models/*"]
+            "@models/*": ["./src/models/*"],
+            "@utils/*": ["./src/utils/*"],
+            "~/*": ["./src/*"]
         }
     },
     "exclude": ["node_modules"],

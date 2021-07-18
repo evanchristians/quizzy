@@ -24,8 +24,10 @@ const SignUp = () => {
                 >
                     <Form>
                         <Stack spacing="2rem">
-                            <FormInput name="firstName" />
-                            <FormInput name="email" />
+                            <FormInput name="username" />
+                            <FormInput name="email" type="email"/>
+                            <FormInput name="password" type="password" />
+                            <FormInput name="confirmPassword" type="password" />
                             <Button size="lg">Submit</Button>
                         </Stack>
                     </Form>

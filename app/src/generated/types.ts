@@ -32,11 +32,27 @@ export type CreateQuestionInput = {
   answers: Array<CreateAnswerInput>;
 };
 
+export type CreateUserInput = {
+  username: Scalars['String'];
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
+export type LoginUserInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createQuestion: Question;
   updateQuestion: Question;
   deleteQuestion: Scalars['Boolean'];
+  createUser: User;
+  loginUser: User;
+  updateUser: User;
+  deleteUser: Scalars['Boolean'];
+  logout: Scalars['Boolean'];
 };
 
 
@@ -55,14 +71,42 @@ export type MutationDeleteQuestionArgs = {
   id: Scalars['String'];
 };
 
+
+export type MutationCreateUserArgs = {
+  data: CreateUserInput;
+};
+
+
+export type MutationLoginUserArgs = {
+  data: LoginUserInput;
+};
+
+
+export type MutationUpdateUserArgs = {
+  data: UpdateUserInput;
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteUserArgs = {
+  id: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
   questions: Array<Question>;
   question: Question;
+  users: Array<User>;
+  user: User;
 };
 
 
 export type QueryQuestionArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryUserArgs = {
   id: Scalars['String'];
 };
 
@@ -75,6 +119,20 @@ export type Question = {
 
 export type UpdateQuestionInput = {
   body?: Maybe<Scalars['String']>;
+};
+
+export type UpdateUserInput = {
+  username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  password?: Maybe<Scalars['String']>;
+};
+
+export type User = {
+  __typename?: 'User';
+  id: Scalars['ID'];
+  username: Scalars['String'];
+  email: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export type QuestionsQueryVariables = Exact<{ [key: string]: never; }>;
