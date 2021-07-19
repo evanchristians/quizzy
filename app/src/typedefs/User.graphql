@@ -1,0 +1,25 @@
+query Me {
+    me {
+        id
+        username
+        email
+    }
+}
+mutation CreateUser($createUserData: CreateUserInput!) {
+    createUser(data: $createUserData) {
+        id
+        email
+        password
+        username
+    }
+}
+mutation LogoutUser {
+    logout
+}
+mutation LoginUser($loginUserData: LoginUserInput!) {
+    loginUser(data: $loginUserData) {
+        id
+        username
+        email
+    }
+}

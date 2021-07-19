@@ -1,25 +1,23 @@
 import { CheckCircleIcon } from "@chakra-ui/icons";
-import { Box, Flex, List, ListIcon, ListItem } from "@chakra-ui/react";
+import { Box, Flex, List, ListIcon, ListItem, Text } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { Container } from "../components/Container";
 import { Hero } from "../components/Hero";
 import { Main } from "../components/Main";
-import { useQuestionsQuery } from "../generated/types";
+import { useMeQuery, useQuestionsQuery } from "../generated/types";
 
 const Index = () => {
     const { data, loading } = useQuestionsQuery();
+    const { data: user } = useMeQuery();
 
     useEffect(() => {
-        console.log(data);
-    }, [data]);
-
-    useEffect(() => {
-        console.log(loading);
-    }, [loading]);
-
+        console.log(user);
+    }, [user]);
     return (
         <Container>
             <Hero />
+            {user?.me && <Text>Welcome, {user.me.username}</Text>}
+
             <Main>
                 <List spacing={3} my={0}>
                     {!loading &&

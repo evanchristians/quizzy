@@ -3,6 +3,7 @@ import {
     FormLabel,
     Input,
     FormErrorMessage,
+    Box,
 } from "@chakra-ui/react";
 import { Field } from "formik";
 import React from "react";
@@ -32,7 +33,11 @@ export const FormInput = ({ name, label, type = "text" }: FormInputProps) => {
                             placeholder={label ?? toSentence(name)}
                             type={type}
                         />
-                        <FormErrorMessage>{form.errors[name]}</FormErrorMessage>
+                        <Box height={4} py={2}>
+                            <FormErrorMessage mt={0}>
+                                {form.errors[name]}
+                            </FormErrorMessage>
+                        </Box>
                     </FormControl>
                 );
             }}

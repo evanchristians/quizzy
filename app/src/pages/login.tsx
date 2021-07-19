@@ -5,59 +5,54 @@ import { Container } from "../components/Container";
 import { FormInput } from "../components/FormInput";
 import { Hero } from "../components/Hero";
 import { Main } from "../components/Main";
-import { useCreateUserMutation } from "../generated/types";
-import { SignupSchema } from "../utils/validationSchema";
+import { useLoginUserMutation } from "../generated/types";
+import { LoginSchema } from "../utils/validationSchema";
 
-const SignUp = () => {
-    const [createUser] = useCreateUserMutation({});
+const Login = () => {
+    const [loginUser] = useLoginUserMutation({});
 
-    const handleSubmit = async ({ username, email, password }) => {
-        const { data } = await createUser({
-            variables: {
-                createUserData: {
-                    username,
-                    email,
-                    password,
+    const handleSubmit = async ({ email, password }) => {
+        try {
+            await loginUser({
+                variables: {
+                    loginUserData: {
+                        email,
+                        password,
+                    },
                 },
-            },
-        });
-
-        return { data };
+            });
+        } catch (err) {
+            return { error: err.message };
+        }
     };
+
     return (
         <Container>
-            <Hero title="Sign Up" />
+            <Hero title="Login" />
             <Main>
                 <Formik
                     initialValues={{
-                        username: "",
                         email: "",
                         password: "",
-                        confirmPassword: "",
                     }}
-                    validationSchema={SignupSchema}
-                    onSubmit={async (values, { setSubmitting }) => {
-                        console.log(values)
-                        const { data } = await handleSubmit(values);
-                        if (data) setSubmitting(false);
+                    validationSchema={LoginSchema}
+                    onSubmit={async (values, { setSubmitting, setErrors }) => {
+                        const { error } = await handleSubmit(values);
+                        if (error) setErrors({ email: error });
+                        setSubmitting(false);
                     }}
                 >
                     {({ isSubmitting }) => (
                         <Form>
                             <Stack spacing="2rem">
-                                <FormInput name="username" />
                                 <FormInput name="email" type="email" />
                                 <FormInput name="password" type="password" />
-                                <FormInput
-                                    name="confirmPassword"
-                                    type="password"
-                                />
                                 <Button
                                     type="submit"
                                     size="lg"
                                     loading={isSubmitting}
                                 >
-                                    Sign Up
+                                    Login
                                 </Button>
                             </Stack>
                         </Form>
@@ -68,4 +63,4 @@ const SignUp = () => {
     );
 };
 
-export default SignUp;
+export default Login;

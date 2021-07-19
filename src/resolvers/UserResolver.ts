@@ -20,8 +20,8 @@ export class UserResolver {
     }
 
     @Query(() => User, { nullable: true })
-    async me(@Ctx() { user }: Context) {
-        return user;
+    async me(@Ctx() ctx: Context) {
+        return ctx.user;
     }
 
     @Mutation(() => User)
@@ -46,7 +46,7 @@ export class UserResolver {
     ) {
         const user = await User.findOne({ where: { email: data.email } });
 
-        if (!user) throw new Error("User not found!");
+        if (!user) throw new Error("User not found! Try again, you fucking idiot.");
         if (!bcrypt.compareSync(data.password, user.password)) {
             throw new Error("Incorrect Password!");
         }
