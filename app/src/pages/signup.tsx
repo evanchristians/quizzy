@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Stack } from "@chakra-ui/react";
+import { Box, Button, Grid, Link, Stack, Text } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/dist/client/router";
 import React from "react";
@@ -9,6 +9,7 @@ import { Main } from "../components/Main";
 import { MeDocument, MeQuery, useCreateUserMutation } from "../generated/types";
 import { setFieldErrors } from "../utils/setFieldErrors";
 import { SignupSchema } from "../utils/validationSchema";
+import NextLink from "next/link";
 
 const SignUp = () => {
     const router = useRouter();
@@ -85,12 +86,18 @@ const SignUp = () => {
                                             name="confirmPassword"
                                             type="password"
                                         />
+                                        <Text fontSize={14}>
+                                            Already have an account?{" "}
+                                            <NextLink href="/login">
+                                                <Link>Login</Link>
+                                            </NextLink>
+                                        </Text>
                                     </Grid>
                                     <Button
                                         alignSelf="center"
                                         type="submit"
                                         size="lg"
-                                        loading={isSubmitting}
+                                        loading={isSubmitting.toString()}
                                     >
                                         Sign Up
                                     </Button>

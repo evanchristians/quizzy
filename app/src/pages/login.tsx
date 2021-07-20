@@ -1,4 +1,4 @@
-import { Button, Stack } from "@chakra-ui/react";
+import { Button, Link, Stack, Text } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/dist/client/router";
 import React from "react";
@@ -9,6 +9,7 @@ import { Main } from "../components/Main";
 import { MeDocument, MeQuery, useLoginUserMutation } from "../generated/types";
 import { setFieldErrors } from "../utils/setFieldErrors";
 import { LoginSchema } from "../utils/validationSchema";
+import NextLink from "next/link";
 
 const Login = () => {
     const router = useRouter();
@@ -70,10 +71,13 @@ const Login = () => {
                                     type="email"
                                 />
                                 <FormInput name="password" type="password" />
+                                <Text>
+                                    Already have an account? <NextLink href="/login"><Link>Login</Link></NextLink>
+                                </Text>
                                 <Button
                                     type="submit"
                                     size="lg"
-                                    loading={isSubmitting}
+                                    loading={isSubmitting.toString()}
                                 >
                                     Login
                                 </Button>

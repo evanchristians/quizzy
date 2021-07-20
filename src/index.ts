@@ -1,17 +1,17 @@
-import "reflect-metadata";
 import "module-alias/register";
+import "reflect-metadata";
 import { QuestionResolver } from "@resolvers/QuestionResolver";
 import { UserResolver } from "@resolvers/UserResolver";
 import { getUserFromToken } from "@utils/AuthHelpers";
 import { ApolloServer } from "apollo-server-express";
 import cookieParser from "cookie-parser";
 import express from "express";
+import { execute, subscribe } from "graphql";
 import { PubSub } from "graphql-subscriptions";
 import { createServer } from "http";
+import { SubscriptionServer } from "subscriptions-transport-ws";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
-import { SubscriptionServer } from "subscriptions-transport-ws";
-import { execute, subscribe } from "graphql";
 
 (async () => {
     await createConnection();
@@ -22,8 +22,17 @@ import { execute, subscribe } from "graphql";
         schema,
         context: async ({ req, res }) => {
             let token = req.cookies["token"];
-            const user = await getUserFromToken(token);
-            return { req, res, user };
+
+            if (!token) {
+                return { req, res };
+            }
+
+            try {
+                const user = await getUserFromToken(token);
+                return { user, req, res };
+            } catch {
+                return { req, res };
+            }
         },
     });
     await apolloServer.start();
