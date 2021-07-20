@@ -14,10 +14,12 @@
         "cookie-parser": "^1.4.5",
         "express": "^4.17.1",
         "graphql": "^15.5.1",
+        "http": "^0.0.1-security",
         "jsonwebtoken": "^8.5.1",
         "module-alias": "^2.2.2",
         "mysql": "^2.18.1",
         "reflect-metadata": "^0.1.13",
+        "subscriptions-transport-ws": "^0.9.19",
         "type-graphql": "^1.1.1",
         "typeorm": "^0.2.34"
     },

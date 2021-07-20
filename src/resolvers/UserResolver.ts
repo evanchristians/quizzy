@@ -4,8 +4,19 @@ import { UpdateUserInput } from "@inputs/UpdateUserInput";
 import { User } from "@models/User";
 import { Auth } from "@utils/AuthHelpers";
 import bcrypt from "bcrypt";
-import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import {
+    Arg,
+    Ctx,
+    Mutation,
+    Publisher,
+    PubSub,
+    Query,
+    Resolver,
+    Subscription,
+} from "type-graphql";
+import { MoreThan } from "typeorm";
 import { Context } from "~/context";
+import { FieldError } from "~/errors/FieldError";
 
 @Resolver()
 export class UserResolver {
@@ -20,8 +31,8 @@ export class UserResolver {
     }
 
     @Query(() => User, { nullable: true })
-    async me(@Ctx() ctx: Context) {
-        return ctx.user;
+    async me(@Ctx() { user }: Context) {
+        return user;
     }
 
     @Mutation(() => User)
@@ -29,6 +40,25 @@ export class UserResolver {
         @Arg("data") data: CreateUserInput,
         @Ctx() { res }: Context
     ) {
+        const existingUserEmail = await User.findOne({
+            where: { email: data.email },
+        });
+        const existingUsername = await User.findOne({
+            where: { username: data.username },
+        });
+
+        if (existingUserEmail)
+            return new FieldError(
+                "This email address is already taken!",
+                "email"
+            );
+
+        if (existingUsername)
+            return new FieldError(
+                "This username is already taken!",
+                "username"
+            );
+
         const password = bcrypt.hashSync(data.password, 10);
         const user = User.create({ ...data, password });
         await user.save();
@@ -46,9 +76,14 @@ export class UserResolver {
     ) {
         const user = await User.findOne({ where: { email: data.email } });
 
-        if (!user) throw new Error("User not found! Try again, you fucking idiot.");
+        if (!user)
+            throw new FieldError(
+                "User not found! Try again, you fucking idiot.",
+                "email"
+            );
+
         if (!bcrypt.compareSync(data.password, user.password)) {
-            throw new Error("Incorrect Password!");
+            throw new FieldError("Incorrect Password!", "password");
         }
 
         const { token } = Auth(user);
@@ -65,7 +100,7 @@ export class UserResolver {
         const user = await User.findOne({ where: { id } });
 
         if (!user) {
-            throw new Error("User not found!");
+            throw new FieldError("User not found!", "id");
         }
 
         Object.assign(user, data);
@@ -79,7 +114,7 @@ export class UserResolver {
         const user = await User.findOne({ where: { id } });
 
         if (!user) {
-            throw new Error("User not found!");
+            throw new FieldError("User not found!", "id");
         }
 
         await user.remove();
@@ -94,10 +129,32 @@ export class UserResolver {
             secure: true,
         });
 
-        if (user) {
-            user = undefined;
-        }
+        if (user) user = undefined;
 
         return true;
+    }
+
+    @Mutation(() => Boolean)
+    async updateLastSeen(
+        @Ctx() { user }: Context,
+        @PubSub("ONLINE_USERS") publish: Publisher<User>
+    ) {
+        if (!user) return false;
+        user.last_seen = new Date();
+        await user.save();
+        await publish(user);
+
+        return true;
+    }
+
+    @Subscription(() => [User], { topics: "ONLINE_USERS" })
+    async getOnlineUsers(): Promise<User[]> {
+        const users = await User.find({
+            where: {
+                last_seen: MoreThan(new Date(new Date().getTime() - 30 * 1000)),
+            },
+        });
+
+        return users;
     }
 }

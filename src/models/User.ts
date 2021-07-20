@@ -19,4 +19,8 @@ export class User extends BaseEntity {
     @Field(() => String)
     @Column()
     password: string;
+
+    @Field(() => Date)
+    @Column({ type: "timestamp", nullable: true })
+    last_seen: Date;
 }

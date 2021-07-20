@@ -12,6 +12,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
+  DateTime: any;
 };
 
 export type Answer = {
@@ -38,6 +40,7 @@ export type CreateUserInput = {
   password: Scalars['String'];
 };
 
+
 export type LoginUserInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -53,6 +56,7 @@ export type Mutation = {
   updateUser: User;
   deleteUser: Scalars['Boolean'];
   logout: Scalars['Boolean'];
+  updateLastSeen: Scalars['Boolean'];
 };
 
 
@@ -118,6 +122,11 @@ export type Question = {
   answers: Array<Answer>;
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  getOnlineUsers: Array<User>;
+};
+
 export type UpdateQuestionInput = {
   body?: Maybe<Scalars['String']>;
 };
@@ -134,6 +143,7 @@ export type User = {
   username: Scalars['String'];
   email: Scalars['String'];
   password: Scalars['String'];
+  last_seen: Scalars['DateTime'];
 };
 
 export type QuestionsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -211,6 +221,25 @@ export type LoginUserMutation = (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'username' | 'email'>
   ) }
+);
+
+export type UpdateLastSeenMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UpdateLastSeenMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'updateLastSeen'>
+);
+
+export type GetOnlineUsersSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetOnlineUsersSubscription = (
+  { __typename?: 'Subscription' }
+  & { getOnlineUsers: Array<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'email' | 'username' | 'last_seen'>
+  )> }
 );
 
 
@@ -430,3 +459,65 @@ export function useLoginUserMutation(baseOptions?: Apollo.MutationHookOptions<Lo
 export type LoginUserMutationHookResult = ReturnType<typeof useLoginUserMutation>;
 export type LoginUserMutationResult = Apollo.MutationResult<LoginUserMutation>;
 export type LoginUserMutationOptions = Apollo.BaseMutationOptions<LoginUserMutation, LoginUserMutationVariables>;
+export const UpdateLastSeenDocument = gql`
+    mutation UpdateLastSeen {
+  updateLastSeen
+}
+    `;
+export type UpdateLastSeenMutationFn = Apollo.MutationFunction<UpdateLastSeenMutation, UpdateLastSeenMutationVariables>;
+
+/**
+ * __useUpdateLastSeenMutation__
+ *
+ * To run a mutation, you first call `useUpdateLastSeenMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLastSeenMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLastSeenMutation, { data, loading, error }] = useUpdateLastSeenMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUpdateLastSeenMutation(baseOptions?: Apollo.MutationHookOptions<UpdateLastSeenMutation, UpdateLastSeenMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateLastSeenMutation, UpdateLastSeenMutationVariables>(UpdateLastSeenDocument, options);
+      }
+export type UpdateLastSeenMutationHookResult = ReturnType<typeof useUpdateLastSeenMutation>;
+export type UpdateLastSeenMutationResult = Apollo.MutationResult<UpdateLastSeenMutation>;
+export type UpdateLastSeenMutationOptions = Apollo.BaseMutationOptions<UpdateLastSeenMutation, UpdateLastSeenMutationVariables>;
+export const GetOnlineUsersDocument = gql`
+    subscription GetOnlineUsers {
+  getOnlineUsers {
+    id
+    email
+    username
+    last_seen
+  }
+}
+    `;
+
+/**
+ * __useGetOnlineUsersSubscription__
+ *
+ * To run a query within a React component, call `useGetOnlineUsersSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useGetOnlineUsersSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOnlineUsersSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetOnlineUsersSubscription(baseOptions?: Apollo.SubscriptionHookOptions<GetOnlineUsersSubscription, GetOnlineUsersSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<GetOnlineUsersSubscription, GetOnlineUsersSubscriptionVariables>(GetOnlineUsersDocument, options);
+      }
+export type GetOnlineUsersSubscriptionHookResult = ReturnType<typeof useGetOnlineUsersSubscription>;
+export type GetOnlineUsersSubscriptionResult = Apollo.SubscriptionResult<GetOnlineUsersSubscription>;
